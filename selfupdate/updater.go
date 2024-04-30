@@ -15,10 +15,10 @@ import (
 // Updater is responsible for managing the context of self-update.
 // It contains GitHub client and its context.
 type Updater struct {
-	api       *github.Client
-	apiCtx    context.Context
-	validator Validator
-	filters   []*regexp.Regexp
+	Api       *github.Client
+	ApiCtx    context.Context
+	Validator Validator
+	Filters   []*regexp.Regexp
 }
 
 // Config represents the configuration of self-update.
@@ -71,7 +71,7 @@ func NewUpdater(config Config) (*Updater, error) {
 
 	if config.EnterpriseBaseURL == "" {
 		client := github.NewClient(hc)
-		return &Updater{api: client, apiCtx: ctx, validator: config.Validator, filters: filtersRe}, nil
+		return &Updater{Api: client, ApiCtx: ctx, Validator: config.Validator, Filters: filtersRe}, nil
 	}
 
 	u := config.EnterpriseUploadURL
@@ -82,7 +82,7 @@ func NewUpdater(config Config) (*Updater, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Updater{api: client, apiCtx: ctx, validator: config.Validator, filters: filtersRe}, nil
+	return &Updater{Api: client, ApiCtx: ctx, Validator: config.Validator, Filters: filtersRe}, nil
 }
 
 // DefaultUpdater creates a new updater instance with default configuration.
@@ -95,5 +95,5 @@ func DefaultUpdater() *Updater {
 	}
 	ctx := context.Background()
 	client := newHTTPClient(ctx, token)
-	return &Updater{api: github.NewClient(client), apiCtx: ctx}
+	return &Updater{Api: github.NewClient(client), ApiCtx: ctx}
 }

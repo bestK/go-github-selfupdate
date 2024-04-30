@@ -80,6 +80,7 @@ func (up *Updater) UpdateTo(rel *Release, cmdPath string) error {
 	}
 
 	validationSrc, validationRedirectURL, err := up.Api.Repositories.DownloadReleaseAsset(up.ApiCtx, rel.RepoOwner, rel.RepoName, rel.ValidationAssetID, &client)
+	
 	if err != nil {
 		return fmt.Errorf("Failed to call GitHub Releases API for getting an validation asset(ID: %d) for repository '%s/%s': %s", rel.ValidationAssetID, rel.RepoOwner, rel.RepoName, err)
 	}

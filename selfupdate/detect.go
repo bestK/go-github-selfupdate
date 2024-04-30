@@ -148,7 +148,7 @@ func (up *Updater) DetectVersion(slug string, version string) (release *Release,
 		return nil, false, fmt.Errorf("Invalid slug format. It should be 'owner/name': %s", slug)
 	}
 
-	rels, res, err := up.api.Repositories.ListReleases(up.apiCtx, repo[0], repo[1], nil)
+	rels, res, err := up.Api.Repositories.ListReleases(up.ApiCtx, repo[0], repo[1], nil)
 	if err != nil {
 		log.Println("API returned an error response:", err)
 		if res != nil && res.StatusCode == 404 {
@@ -159,7 +159,7 @@ func (up *Updater) DetectVersion(slug string, version string) (release *Release,
 		return nil, false, err
 	}
 
-	rel, asset, ver, found := findReleaseAndAsset(rels, version, up.filters)
+	rel, asset, ver, found := findReleaseAndAsset(rels, version, up.Filters)
 	if !found {
 		return nil, false, nil
 	}
@@ -182,8 +182,8 @@ func (up *Updater) DetectVersion(slug string, version string) (release *Release,
 		repo[1],
 	}
 
-	if up.validator != nil {
-		validationName := asset.GetName() + up.validator.Suffix()
+	if up.Validator != nil {
+		validationName := asset.GetName() + up.Validator.Suffix()
 		validationAsset, ok := findValidationAsset(rel, validationName)
 		if !ok {
 			return nil, false, fmt.Errorf("Failed finding validation file %q", validationName)

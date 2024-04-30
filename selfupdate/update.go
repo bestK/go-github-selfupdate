@@ -35,7 +35,7 @@ func (up *Updater) downloadDirectlyFromURL(assetURL string) (io.ReadCloser, erro
 	}
 
 	req.Header.Add("Accept", "application/octet-stream")
-	req = req.WithContext(up.apiCtx)
+	req = req.WithContext(up.ApiCtx)
 
 	// OAuth HTTP client is not available to download blob from URL when the URL is a redirect URL
 	// returned from GitHub Releases API (response status 400).
@@ -57,7 +57,7 @@ func (up *Updater) downloadDirectlyFromURL(assetURL string) (io.ReadCloser, erro
 // If a redirect occurs, it fallbacks into directly downloading from the redirect URL.
 func (up *Updater) UpdateTo(rel *Release, cmdPath string) error {
 	var client http.Client
-	src, redirectURL, err := up.api.Repositories.DownloadReleaseAsset(up.apiCtx, rel.RepoOwner, rel.RepoName, rel.AssetID, &client)
+	src, redirectURL, err := up.Api.Repositories.DownloadReleaseAsset(up.ApiCtx, rel.RepoOwner, rel.RepoName, rel.AssetID, &client)
 	if err != nil {
 		return fmt.Errorf("Failed to call GitHub Releases API for getting an asset(ID: %d) for repository '%s/%s': %s", rel.AssetID, rel.RepoOwner, rel.RepoName, err)
 	}
@@ -75,11 +75,11 @@ func (up *Updater) UpdateTo(rel *Release, cmdPath string) error {
 		return fmt.Errorf("Failed reading asset body: %v", err)
 	}
 
-	if up.validator == nil {
+	if up.Validator == nil {
 		return uncompressAndUpdate(bytes.NewReader(data), rel.AssetURL, cmdPath)
 	}
 
-	validationSrc, validationRedirectURL, err := up.api.Repositories.DownloadReleaseAsset(up.apiCtx, rel.RepoOwner, rel.RepoName, rel.ValidationAssetID, &client)
+	validationSrc, validationRedirectURL, err := up.Api.Repositories.DownloadReleaseAsset(up.ApiCtx, rel.RepoOwner, rel.RepoName, rel.ValidationAssetID, &client)
 	if err != nil {
 		return fmt.Errorf("Failed to call GitHub Releases API for getting an validation asset(ID: %d) for repository '%s/%s': %s", rel.ValidationAssetID, rel.RepoOwner, rel.RepoName, err)
 	}
@@ -98,7 +98,7 @@ func (up *Updater) UpdateTo(rel *Release, cmdPath string) error {
 		return fmt.Errorf("Failed reading validation asset body: %v", err)
 	}
 
-	if err := up.validator.Validate(data, validationData); err != nil {
+	if err := up.Validator.Validate(data, validationData); err != nil {
 		return fmt.Errorf("Failed validating asset content: %v", err)
 	}
 

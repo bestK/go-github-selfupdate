@@ -38,11 +38,11 @@ func TestGitHubEnterpriseClient(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if up.api.BaseURL.String() != url {
-		t.Error("Base URL was set to", up.api.BaseURL, ", want", url)
+	if up.Api.BaseURL.String() != url {
+		t.Error("Base URL was set to", up.Api.BaseURL, ", want", url)
 	}
-	if up.api.UploadURL.String() != url {
-		t.Error("Upload URL was set to", up.api.UploadURL, ", want", url)
+	if up.Api.UploadURL.String() != url {
+		t.Error("Upload URL was set to", up.Api.UploadURL, ", want", url)
 	}
 
 	url2 := "https://upload.github.company.com/api/v3/"
@@ -54,11 +54,11 @@ func TestGitHubEnterpriseClient(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if up.api.BaseURL.String() != url {
-		t.Error("Base URL was set to", up.api.BaseURL, ", want", url)
+	if up.Api.BaseURL.String() != url {
+		t.Error("Base URL was set to", up.Api.BaseURL, ", want", url)
 	}
-	if up.api.UploadURL.String() != url2 {
-		t.Error("Upload URL was set to", up.api.UploadURL, ", want", url2)
+	if up.Api.UploadURL.String() != url2 {
+		t.Error("Upload URL was set to", up.Api.UploadURL, ", want", url2)
 	}
 }
 
@@ -80,10 +80,10 @@ func TestCompileRegexForFiltering(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(up.filters) != 2 {
-		t.Fatalf("Wanted 2 regexes but got %d", len(up.filters))
+	if len(up.Filters) != 2 {
+		t.Fatalf("Wanted 2 regexes but got %d", len(up.Filters))
 	}
-	for i, r := range up.filters {
+	for i, r := range up.Filters {
 		want := filters[i]
 		got := r.String()
 		if want != got {
